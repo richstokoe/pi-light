@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace pi_light
+namespace RS.PiLight
 {
     public class Startup
     {
@@ -24,6 +24,7 @@ namespace pi_light
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSingleton<GpioHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

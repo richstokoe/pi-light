@@ -5,17 +5,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using pi_light.Models;
+using RS.PiLight.Models;
 
-namespace pi_light.Controllers
+namespace RS.PiLight.Controllers
 {
     public class HomeController : Controller
     {
+        private const int RED = 16;
+        private const int GREEN = 26;
         private readonly ILogger<HomeController> _logger;
+        private readonly GpioHelper gpio;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger,
+            GpioHelper gpio)
         {
             _logger = logger;
+            this.gpio = gpio;
         }
 
         public IActionResult Index()
@@ -23,15 +29,20 @@ namespace pi_light.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Red(bool on = true)
         {
-            return View();
+            var pinValue = on ? PinValue.High : PinValue.Low;
+            gpio.SetPinMode(RED, PinMode.Output);
+            gpio.WritePin(RED, pinValue);
+            return Content("RED is ON");
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Green(bool on = true)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var pinValue = on ? PinValue.High : PinValue.Low;
+            gpio.SetPinMode(GREEN, PinMode.Output);
+            gpio.WritePin(GREEN, pinValue);
+            return Content("GREEN is ON");
         }
     }
 }

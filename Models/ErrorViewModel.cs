@@ -1,6 +1,6 @@
 using System;
 
-namespace pi_light.Models
+namespace RS.PiLight.Models
 {
     public class ErrorViewModel
     {
