@@ -11,8 +11,8 @@ namespace RS.PiLight.Controllers
 {
     public class HomeController : Controller
     {
-        private const int RED = 16;
-        private const int GREEN = 26;
+        private const int RED = 26;
+        private const int GREEN = 16;
         private readonly ILogger<HomeController> _logger;
         private readonly GpioHelper gpio;
 
@@ -22,6 +22,20 @@ namespace RS.PiLight.Controllers
         {
             _logger = logger;
             this.gpio = gpio;
+
+            EnsurePinsOpen();
+        }
+
+        private void EnsurePinsOpen()
+        {
+            try
+            {
+                this.gpio.SetPinMode(RED, PinMode.Output);
+                this.gpio.SetPinMode(GREEN, PinMode.Output);
+            }
+            catch (InvalidOperationException)
+            {
+            }
         }
 
         public IActionResult Index()
@@ -32,17 +46,15 @@ namespace RS.PiLight.Controllers
         public IActionResult Red(bool on = true)
         {
             var pinValue = on ? PinValue.High : PinValue.Low;
-            gpio.SetPinMode(RED, PinMode.Output);
             gpio.WritePin(RED, pinValue);
-            return Content("RED is ON");
+            return Content($"RED: {pinValue}");
         }
 
         public IActionResult Green(bool on = true)
         {
             var pinValue = on ? PinValue.High : PinValue.Low;
-            gpio.SetPinMode(GREEN, PinMode.Output);
             gpio.WritePin(GREEN, pinValue);
-            return Content("GREEN is ON");
+            return Content($"GREEN: {pinValue}");
         }
     }
 }
